@@ -1,0 +1,2 @@
+- name: Notify Discord on new Issue
+  uses: Tungdil83/discord-issue-notify@v1.1.0
