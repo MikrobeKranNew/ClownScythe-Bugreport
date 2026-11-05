@@ -1,4 +1,3 @@
-```yaml
 name: Webhook when new Issue
 
 on:
@@ -37,4 +36,4 @@ jobs:
               --data-binary @- \
               --fail-with-body \
               --show-error
-```
+              
