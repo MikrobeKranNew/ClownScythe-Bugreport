@@ -12,46 +12,105 @@ jobs:
       - name: Send Data to Webhook
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          DISCORD_USER_IDS: ${{ secrets.DISCORD_USER_IDS }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          ISSUE_AVATAR: ${{ github.event.issue.user.avatar_url }}
           ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_CREATED_AT: ${{ github.event.issue.created_at }}
+          ISSUE_LABELS: ${{ toJSON(github.event.issue.labels.*.name) }}
+          REPOSITORY: ${{ github.repository }}
           ISSUE_ACTION: ${{ github.event.action }}
 
         run: |
           if [ "$ISSUE_ACTION" = "reopened" ]; then
             MESSAGE="🔄 GitHub Issue reopened!"
+            COLOR=5793266
           else
             MESSAGE="🆕 New GitHub Issue created!"
+            COLOR=5763719
           fi
 
           jq -n \
-            --arg content "$MESSAGE" \
+            --arg message "$MESSAGE" \
+            --arg ids "$DISCORD_USER_IDS" \
             --arg title "$ISSUE_TITLE" \
             --arg url "$ISSUE_URL" \
             --arg author "$ISSUE_AUTHOR" \
+            --arg avatar "$ISSUE_AVATAR" \
             --arg body "$ISSUE_BODY" \
-            '{
-              content: $content,
+            --arg number "$ISSUE_NUMBER" \
+            --arg created "$ISSUE_CREATED_AT" \
+            --arg repo "$REPOSITORY" \
+            --argjson color "$COLOR" \
+            --argjson labels "$ISSUE_LABELS" \
+            '
+            ($ids | split(",") |
+              map(gsub("^\\s+|\\s+$"; "")) |
+              map(select(length > 0))
+            ) as $user_ids |
+
+            {
+              content: (
+                [$message,
+                 ($user_ids | map("<@" + . + ">") | join(" "))]
+                | join("\n")
+              ),
+
+              allowed_mentions: {
+                parse: [],
+                users: $user_ids
+              },
+
               embeds: [
                 {
-                  title: $title,
+                  title: ("#" + $number + " — " + $title),
                   url: $url,
                   description: (
-                    if $body == "" then "No description provided."
-                    else $body
+                    if $body == "" then
+                      "No description provided."
+                    else
+                      ($body | .[0:3500])
                     end
                   ),
-                  color: 5763719,
+                  color: $color,
                   author: {
-                    name: $author
+                    name: $author,
+                    icon_url: $avatar
                   },
+                  fields: [
+                    {
+                      name: "📁 Repository",
+                      value: $repo,
+                      inline: true
+                    },
+                    {
+                      name: "🔢 Issue Number",
+                      value: ("#" + $number),
+                      inline: true
+                    },
+                    {
+                      name: "🏷️ Labels",
+                      value: (
+                        if ($labels | length) > 0 then
+                          ($labels | join(", "))
+                        else
+                          "None"
+                        end
+                      ),
+                      inline: false
+                    }
+                  ],
                   footer: {
                     text: "GitHub Issues"
-                  }
+                  },
+                  timestamp: $created
                 }
               ]
-            }' | curl -X POST "$WEBHOOK_URL" \
+            }
+            ' | curl -X POST "$WEBHOOK_URL" \
               -H "Content-Type: application/json" \
               --data-binary @- \
               --fail-with-body \
