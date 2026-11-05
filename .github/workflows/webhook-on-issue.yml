@@ -7,6 +7,7 @@ on:
 jobs:
   send-webhook:
     runs-on: ubuntu-latest
+
     steps:
       - name: Send Data to Webhook
         env:
@@ -15,25 +16,43 @@ jobs:
           ISSUE_URL: ${{ github.event.issue.html_url }}
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
           ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_ACTION: ${{ github.event.action }}
 
         run: |
+          if [ "$ISSUE_ACTION" = "reopened" ]; then
+            MESSAGE="🔄 GitHub Issue reopened!"
+          else
+            MESSAGE="🆕 New GitHub Issue created!"
+          fi
+
           jq -n \
-            --arg event "issue_created" \
-            --arg content "🆕 New GitHub Issue created!" \
+            --arg content "$MESSAGE" \
             --arg title "$ISSUE_TITLE" \
             --arg url "$ISSUE_URL" \
             --arg author "$ISSUE_AUTHOR" \
             --arg body "$ISSUE_BODY" \
             '{
-              event: $event,
               content: $content,
-              title: $title,
-              url: $url,
-              author: $author,
-              body: $body
+              embeds: [
+                {
+                  title: $title,
+                  url: $url,
+                  description: (
+                    if $body == "" then "No description provided."
+                    else $body
+                    end
+                  ),
+                  color: 5763719,
+                  author: {
+                    name: $author
+                  },
+                  footer: {
+                    text: "GitHub Issues"
+                  }
+                }
+              ]
             }' | curl -X POST "$WEBHOOK_URL" \
               -H "Content-Type: application/json" \
               --data-binary @- \
               --fail-with-body \
               --show-error
-              
