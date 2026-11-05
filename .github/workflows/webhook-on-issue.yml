@@ -1,14 +1,14 @@
-name: Webhook bei neuem Issue
+name: Webhook when new Issue
 
 on:
   issues:
-    types: [opened]
+    types: [opened, reopened]
 
 jobs:
   send-webhook:
     runs-on: ubuntu-latest
     steps:
-      - name: Sende Daten an Webhook
+      - name: Send Data to Webhook
         run: |
           curl -X POST "${{ secrets.WEBHOOK_URL }}" \
           -H "Content-Type: application/json" \
