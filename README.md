@@ -438,7 +438,7 @@ Yes. Please clearly identify your issue as a feature request and explain the ide
 
 ### How long will it take to fix my bug?
 
-There is no guaranteed timeframe. The creator works on the mod in spare time, and the complexity and priority of each issue can vary.
+There is no guaranteed timeframe. I work on the mod in spare time, and the complexity and priority of each issue can vary.
 
 ### What if I discover a security or privacy vulnerability?
 
