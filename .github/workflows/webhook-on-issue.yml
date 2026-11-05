@@ -1,3 +1,4 @@
+```yaml
 name: Webhook when new Issue
 
 on:
@@ -9,13 +10,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Data to Webhook
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+
         run: |
-          curl -X POST "${{ secrets.WEBHOOK_URL }}" \
-          -H "Content-Type: application/json" \
-          -d '{
-            "event": "issue_created",
-            "title": "${{ github.event.issue.title }}",
-            "url": "${{ github.event.issue.html_url }}",
-            "author": "${{ github.event.issue.user.login }}",
-            "body": "${{ github.event.issue.body }}"
-          }'
+          jq -n \
+            --arg event "issue_created" \
+            --arg content "🆕 New GitHub Issue created!" \
+            --arg title "$ISSUE_TITLE" \
+            --arg url "$ISSUE_URL" \
+            --arg author "$ISSUE_AUTHOR" \
+            --arg body "$ISSUE_BODY" \
+            '{
+              event: $event,
+              content: $content,
+              title: $title,
+              url: $url,
+              author: $author,
+              body: $body
+            }' | curl -X POST "$WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              --data-binary @- \
+              --fail-with-body \
+              --show-error
+```
