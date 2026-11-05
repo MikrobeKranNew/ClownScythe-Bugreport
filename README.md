@@ -467,7 +467,7 @@ For downloads and general project information, start with the [Modrinth project 
 
 ## ⚖️ Disclaimer
 
-ClownPierce's Scythe is a community-created Minecraft modification inspired by ClownPierce and the work of Doctor4t.
+ClownPierce's Scythe is a community-created Minecraft modification inspired by the work of Doctor4t.
 
 This GitHub repository is intended for issue tracking and community feedback. It is not necessarily the source-code repository for the mod, and submitting an issue does not imply that the submitter has permission to redistribute, modify, or relicense the mod.
 
