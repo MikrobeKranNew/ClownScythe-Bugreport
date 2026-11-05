@@ -442,11 +442,11 @@ There is no guaranteed timeframe. I work on the mod in spare time, and the compl
 
 ### What if I discover a security or privacy vulnerability?
 
-Do not publicly post sensitive exploit details, private credentials, or personal information. Contact the creator privately through an available official contact channel where possible.
+Do not publicly post sensitive exploit details, private credentials, or personal information. Contact me privately through an issue, where you say, you found one, please include your Discord username, so I can DM you.
 
 ### Where can I ask other questions?
 
-For downloads and general project information, start with the [Modrinth project page](https://modrinth.com/mod/clownscythe). The project description also lists Discord as a contact option.
+For downloads and general project information, start with the [Modrinth project page](https://modrinth.com/mod/clownscythe).
 
 ---
 
@@ -480,10 +480,10 @@ Minecraft is a trademark of Mojang Studios. This project is not an official Mine
 
 ## ❤️ Thank You!
 
-Thank you for taking the time to report bugs, share suggestions, and help improve ClownPierce's Scythe.
+Thank you for taking the time to report bugs, share suggestions, and help improve the mod.
 
 Detailed reports and constructive feedback make it easier to identify problems, improve stability, and provide a better experience for everyone.
 
 **Found a bug? [Open an issue on GitHub](../../issues/new).**
 
-Enjoy the scythe, master its abilities, conquer the dungeon, and face the Scythe Guardian. 🩸
+Enjoy the scythe! ❤️
