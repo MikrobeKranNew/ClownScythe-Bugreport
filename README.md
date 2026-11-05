@@ -31,7 +31,7 @@ If you've encountered a bug, experienced unexpected behavior, or have an idea th
 - [Known Limitations](#-known-limitations)
 - [Frequently Asked Questions](#-frequently-asked-questions)
 - [Links and Resources](#-links-and-resources)
-- [Disclaimer](#-disclaimer)
+- [Disclaimer](#disclaimer)
 
 ---
 
@@ -465,6 +465,7 @@ For downloads and general project information, start with the [Modrinth project 
 
 ---
 
+<a id="disclaimer"></a>
 ## ⚖️ Disclaimer
 
 ClownPierce's Scythe is a community-created Minecraft modification inspired by the work of Doctor4t.
